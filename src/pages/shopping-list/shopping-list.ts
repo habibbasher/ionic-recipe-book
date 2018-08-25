@@ -29,6 +29,11 @@ export class ShoppingListPage implements OnInit {
     form.reset();
   }
 
+  onCheckItem(index: number) {
+    this.slService.removeItem(index);
+    this.loadItems();
+  }
+
   private loadItems() {
     this.listItems = this.slService.getItems();
   }
