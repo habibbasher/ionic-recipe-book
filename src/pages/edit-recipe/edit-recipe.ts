@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavParams, ActionSheetController, AlertController } from 'ionic-angular';
+import { IonicPage, NavParams, ActionSheetController, AlertController, ToastController } from 'ionic-angular';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+
+// Custom Services
+import { UtilityService } from '../../services/utility';
 
 @IonicPage()
 @Component({
@@ -16,7 +19,8 @@ export class EditRecipePage implements OnInit {
   constructor(
     private navParams: NavParams,
     private actionSheetCtrl: ActionSheetController,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private utilService: UtilityService
   ) { }
 
   ngOnInit() {
@@ -29,7 +33,7 @@ export class EditRecipePage implements OnInit {
       title: new FormControl(null, Validators.required),
       description: new FormControl(null, Validators.required),
       difficulty: new FormControl('Medium', Validators.required),
-      ingrediants: new FormArray([])
+      ingredients: new FormArray([])
     });
   }
 
@@ -51,7 +55,14 @@ export class EditRecipePage implements OnInit {
           text: 'Remove all Ingredients',
           role: 'destructive',
           handler: () => {
-
+            const fArray: FormArray = <FormArray> this.recipeForm.get('ingredients');
+            const len = fArray.length;
+            if (len > 0) {
+              for(let i = len - 1; i >= 0; i--) {
+                fArray.removeAt(i);
+              }
+              this.utilService.presentToast('All ingredients are removed from list!', 2000);
+            }
           }
         },
         {
@@ -81,9 +92,11 @@ export class EditRecipePage implements OnInit {
           text: 'Add',
           handler: data => {
             if (data.name.trim() === '' || data.name === null) {
+              this.utilService.presentToast('Please enter a valid value!', 2000);
               return;
             }
-            (<FormArray>this.recipeForm.get('ingrediants')).push(new FormControl(data.name, Validators.required));
+            (<FormArray>this.recipeForm.get('ingredients')).push(new FormControl(data.name, Validators.required));
+            this.utilService.presentToast('Ingredient added to list!', 2000);
           }
         }
       ]

@@ -15,6 +15,7 @@ import { ShoppingListPage } from '../pages/shopping-list/shopping-list';
 
 // Custom Services
 import { ShoppingListService } from '../services/shopping-list';
+import { UtilityService } from '../services/utility';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { ShoppingListService } from '../services/shopping-list';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    ShoppingListService
+    ShoppingListService,
+    UtilityService
   ]
 })
 export class AppModule {}
