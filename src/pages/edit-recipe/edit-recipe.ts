@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavParams, ActionSheetController, AlertController, ToastController } from 'ionic-angular';
+import { IonicPage, NavParams, ActionSheetController, AlertController, NavController } from 'ionic-angular';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 
 // Custom Services
 import { UtilityService } from '../../services/utility';
+import { RecipesService } from '../../services/recipes';
 
 @IonicPage()
 @Component({
@@ -17,10 +18,12 @@ export class EditRecipePage implements OnInit {
   recipeForm: FormGroup;
 
   constructor(
+    private navCtrl: NavController,
     private navParams: NavParams,
     private actionSheetCtrl: ActionSheetController,
     private alertCtrl: AlertController,
-    private utilService: UtilityService
+    private utilService: UtilityService,
+    private recipeService: RecipesService
   ) { }
 
   ngOnInit() {
@@ -38,7 +41,20 @@ export class EditRecipePage implements OnInit {
   }
 
   onRecipeFormSubmit() {
-    console.log('this.recipeForm: ', this.recipeForm);
+    console.log('this.recipeForm.value: ', this.recipeForm.value);
+    const formValue = this.recipeForm.value;
+    let ingredients = [];
+    if (formValue.ingredients.length > 0) {
+      ingredients = formValue.ingredients.map(name => {
+        return {
+          name: name,
+          amount: 1
+        };
+      });
+    }
+    this.recipeService.addRecipe(formValue.title, formValue.description, formValue.difficulty, ingredients);
+    this.recipeForm.reset();
+    this.navCtrl.popToRoot();
   }
 
   onManageIngredients() {
@@ -55,10 +71,10 @@ export class EditRecipePage implements OnInit {
           text: 'Remove all Ingredients',
           role: 'destructive',
           handler: () => {
-            const fArray: FormArray = <FormArray> this.recipeForm.get('ingredients');
+            const fArray: FormArray = <FormArray>this.recipeForm.get('ingredients');
             const len = fArray.length;
             if (len > 0) {
-              for(let i = len - 1; i >= 0; i--) {
+              for (let i = len - 1; i >= 0; i--) {
                 fArray.removeAt(i);
               }
               this.utilService.presentToast('All ingredients are removed from list!', 2000);

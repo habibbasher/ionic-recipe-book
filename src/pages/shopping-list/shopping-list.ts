@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage } from 'ionic-angular';
 import { NgForm } from '@angular/forms';
 
@@ -13,13 +13,13 @@ import { ShoppingListService } from '../../services/shopping-list';
   selector: 'page-shopping-list',
   templateUrl: 'shopping-list.html',
 })
-export class ShoppingListPage implements OnInit {
+export class ShoppingListPage {
 
   listItems: Ingredient[];
 
   constructor(private slService: ShoppingListService) {}
 
-  ngOnInit() {
+  ionViewWillEnter() {
     this.loadItems();
   }
 

@@ -3,6 +3,8 @@ import { IonicPage, NavController } from 'ionic-angular';
 
 // Custom Pages
 import { EditRecipePage } from '../edit-recipe/edit-recipe';
+import { Recipe } from '../../models/recipe';
+import { RecipesService } from '../../services/recipes';
 
 @IonicPage()
 @Component({
@@ -11,10 +13,23 @@ import { EditRecipePage } from '../edit-recipe/edit-recipe';
 })
 export class RecipesPage {
 
-  constructor(public navCtrl: NavController) {}
+  recipes: Recipe[];
+
+  constructor(
+    private navCtrl: NavController,
+    private recipeService: RecipesService
+  ) {}
+
+  ionViewWillEnter() {
+    this.recipes = this.recipeService.getRecipes();
+  }
 
   onAddNewRecipe() {
     this.navCtrl.push(EditRecipePage, { mode: 'New' });
+  }
+
+  onLoadRecipe() {
+
   }
 
 }
