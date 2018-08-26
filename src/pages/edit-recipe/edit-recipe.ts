@@ -41,7 +41,6 @@ export class EditRecipePage implements OnInit {
   }
 
   onRecipeFormSubmit() {
-    console.log('this.recipeForm.value: ', this.recipeForm.value);
     const formValue = this.recipeForm.value;
     let ingredients = [];
     if (formValue.ingredients.length > 0) {
