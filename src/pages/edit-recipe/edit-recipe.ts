@@ -73,7 +73,11 @@ export class EditRecipePage implements OnInit {
         };
       });
     }
-    this.recipeService.addRecipe(formValue.title, formValue.description, formValue.difficulty, ingredients);
+    if (this.mode === 'Edit') {
+      this.recipeService.updateRecipe(this.index, formValue.title, formValue.description, formValue.difficulty, ingredients);
+    } else {
+      this.recipeService.addRecipe(formValue.title, formValue.description, formValue.difficulty, ingredients);
+    }
     this.recipeForm.reset();
     this.navCtrl.popToRoot();
   }
